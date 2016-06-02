@@ -54,16 +54,6 @@ UInt32 const EZAudioPlotDefaultMaxHistoryBufferLength = 8192;
 #pragma mark - Initialization
 //------------------------------------------------------------------------------
 
-- (id)init
-{
-    self = [super init];
-    if (self)
-    {
-        [self initPlot];
-    }
-    return self;
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -130,7 +120,7 @@ UInt32 const EZAudioPlotDefaultMaxHistoryBufferLength = 8192;
     self.waveformLayer.opaque = YES;
     
 #if TARGET_OS_IPHONE
-    self.color = [UIColor colorWithHue:0 saturation:1.0 brightness:1.0 alpha:1.0]; 
+    self.color = [UIColor colorWithHue:0 saturation:1.0 brightness:1.0 alpha:1.0];
 #elif TARGET_OS_MAC
     self.color = [NSColor colorWithCalibratedHue:0 saturation:1.0 brightness:1.0 alpha:1.0];
     self.wantsLayer = YES;
@@ -203,10 +193,12 @@ UInt32 const EZAudioPlotDefaultMaxHistoryBufferLength = 8192;
 - (void)setShouldOptimizeForRealtimePlot:(BOOL)shouldOptimizeForRealtimePlot
 {
     _shouldOptimizeForRealtimePlot = shouldOptimizeForRealtimePlot;
-    if (shouldOptimizeForRealtimePlot && !self.displayLink)
+    if (shouldOptimizeForRealtimePlot)
     {
-        self.displayLink = [EZAudioDisplayLink displayLinkWithDelegate:self];
-        [self.displayLink start];
+        if (!self.displayLink) {
+            self.displayLink = [EZAudioDisplayLink displayLinkWithDelegate:self];
+            [self.displayLink start];
+        }
     }
     else
     {
